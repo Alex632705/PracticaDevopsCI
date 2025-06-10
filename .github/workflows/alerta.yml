@@ -1,0 +1,25 @@
+name: Notificación a notify.sh
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  notificar:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout del código
+        uses: actions/checkout@v3
+
+      - name: Enviar notificación a ntfy.sh
+        env:
+          REPO_NAME: ${{ github.repository }}
+        run: |
+          AUTHOR=$(git log -1 --pretty=format:'%an')
+          curl -X POST \
+            -H "Title: 🎆 Push hecho en main" \
+            -H "Priority: 4" \
+            -d "Se ha hecho push por $AUTHOR al repositorio $REPO_NAME en la rama main." \
+            https://ntfy.sh/devops-itla
